@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PS-CSC-22-0004</title>
+<style>
+  :root{
+    --sky1:#9ed8ff;
+    --sky2:#c7ecff;
+    --grass1:#2c8c36;
+    --grass2:#0f6d21;
+    --wood1:#c58a4a;
+    --wood2:#9a5f2c;
+    --shadow:rgba(0,0,0,0.35);
+  }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(var(--sky1), var(--sky2));
+    font-family:system-ui, sans-serif;
+  }
+
+  .scene{
+    width:1100px;
+    height:650px;
+    position:relative;
+    perspective:1200px;
+    background:
+      radial-gradient(1600px 500px at 50% 0%, rgba(255,255,255,0.35), transparent 50%),
+      linear-gradient(var(--sky1), var(--sky2) 60%, transparent 100%);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  /* Curved back wall */
+  .wall{
+    position:absolute;
+    left:50%; top:80px;
+    width:1700px; height:460px;
+    transform:translateX(-50%) translateZ(-420px) rotateX(15deg) scaleY(0.58);
+    background:linear-gradient(90deg, #36b568, #9af7a7 60%, #36b568);
+    border-radius:50% / 40%;
+    box-shadow:inset 0 -80px 120px rgba(0,0,0,0.15);
+    z-index:2;
+    filter:brightness(0.95);
+  }
+
+  /* Ground */
+  .ground{
+    position:absolute;
+    left:50%; bottom:-40px;
+    width:1500px; height:500px;
+    transform:translateX(-50%) rotateX(60deg);
+    background:
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 10px, transparent 10px 20px),
+      linear-gradient(var(--grass1), var(--grass2));
+    border-top-left-radius:50%;
+    border-top-right-radius:50%;
+    box-shadow:inset 0 -40px 120px rgba(0,0,0,0.4);
+    animation:grass 10s linear infinite;
+    z-index:3;
+  }
+  @keyframes grass{from{background-position:0 0;} to{background-position:180px 0;}}
+
+  /* Pathway */
+  .path{
+    position:absolute;
+    left:50%; bottom:90px;
+    width:260px; height:380px;
+    transform:translateX(-50%) rotateX(70deg);
+    background:linear-gradient(#e7e7e7, #c5c5c5);
+    border-radius:20px;
+    clip-path:polygon(14% 0, 86% 0, 100% 100%, 0% 100%);
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+    z-index:4;
+  }
+
+  /* Stage for table */
+  .stage{
+    position:absolute;
+    left:50%; bottom:210px;
+    transform:translateX(-50%) translateZ(50px) rotateX(9deg);
+    width:550px; height:420px;
+    z-index:10;
+  }
+
+  /* TABLE */
+  .table-top{
+    width:270px; height:110px;
+    margin:0 auto;
+    background:linear-gradient(var(--wood1), var(--wood2));
+    border-radius:50%;
+    box-shadow:0 22px 40px rgba(0,0,0,0.35), inset 0 4px 10px rgba(255,255,255,0.15);
+  }
+  .table-leg{
+    width:42px; height:150px;
+    background:linear-gradient(#8a562e, #6e3b17);
+    border-radius:22px;
+    margin:0 auto;
+    transform:translateY(-10px);
+    box-shadow:0 16px 26px rgba(0,0,0,0.35);
+  }
+
+  /* TABLE SHADOW */
+  .table-shadow{
+    position:absolute;
+    left:50%; bottom:150px;
+    width:340px; height:120px;
+    transform:translateX(-50%) rotateX(82deg) scaleY(0.48);
+    background:radial-gradient(closest-side, rgba(0,0,0,0.5), transparent 60%);
+    filter:blur(14px);
+    z-index:5;
+  }
+
+  /* CHAIRS */
+  .chair{
+    position:absolute;
+    width:110px; height:130px;
+    transform-style:preserve-3d;
+    z-index:12;
+  }
+
+  /* Four chairs positioned */
+  .c1{ left: calc(50% - 210px); bottom:140px; transform:rotateY(20deg); }
+  .c2{ left: calc(50% + 100px); bottom:140px; transform:rotateY(-20deg); }
+  .c3{ left: calc(50% - 60px); bottom:40px; transform:rotateX(10deg); }
+  .c4{ left: calc(50% - 60px); bottom:260px; transform:rotateX(-10deg); }
+
+  /* Chair parts */
+  .seat{
+    position:absolute;
+    left:50%; bottom:18px;
+    transform:translateX(-50%);
+    width:90px; height:42px;
+    background:linear-gradient(#c9a37a,#a97849);
+    border-radius:8px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.35);
+  }
+  .back{
+    position:absolute;
+    left:50%; bottom:60px;
+    transform:translateX(-50%);
+    width:92px; height:72px;
+    background:linear-gradient(#c98f58,#9b6a3d);
+    border-radius:8px;
+  }
+  .leg{
+    position:absolute;
+    width:10px; height:56px;
+    background:#7a4b2a;
+    border-radius:5px;
+    bottom:0;
+  }
+  .l1{left:12px;} .l2{right:12px;}
+
+  /* ITEMS ON TABLE */
+  .items{
+    position:absolute;
+    left:50%; top:30px;
+    transform:translateX(-50%) translateZ(90px) rotateX(-6deg);
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:28px;
+  }
+
+  /* Cylinder base */
+  .cylinder .top{
+    width:58px; height:14px;
+    background:linear-gradient(#fff, #ccc);
+    border-radius:50%;
+    box-shadow:inset 0 3px 6px rgba(0,0,0,0.18);
+  }
+  .cylinder .body{
+    width:58px; height:78px;
+    border-radius:6px;
+    box-shadow:0 14px 26px rgba(0,0,0,0.28);
+    position:relative;
+  }
+  .cylinder .base{
+    width:50px; height:10px;
+    background:linear-gradient(#0002,#fff1);
+    border-radius:50%;
+    margin-top:4px;
+  }
+
+  /* Milo */
+  .milo .body{background:linear-gradient(#1d7f31,#0e541d);}  
+  .milo .label{
+    position:absolute;
+    width:48px; height:34px;
+    left:50%; top:16px;
+    transform:translateX(-50%);
+    background:linear-gradient(#f5e67a,#ffd45f);
+    border-radius:5px;
+    font-weight:700;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    color:#263112;
+  }
+
+  /* Milk */
+  .milk .body{background:linear-gradient(#fff,#e4e4e4);} 
+  .milk .label{
+    position:absolute;
+    width:42px; height:30px;
+    left:50%; top:20px;
+    transform:translateX(-50%);
+    background:linear-gradient(#fff,#dedede);
+    border-radius:4px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    font-weight:600;
+    color:#444;
+  }
+
+  /* Cups */
+  .cup{
+    width:38px; height:38px;
+    background:linear-gradient(#fff,#eee);
+    border-radius:8px;
+    position:relative;
+    box-shadow:0 8px 16px rgba(0,0,0,0.22);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .cup::after{
+    content:"";
+    position:absolute;
+    right:-9px;
+    width:14px; height:20px;
+    border-radius:0 12px 12px 0;
+    border:3px solid rgba(160,160,160,0.25);
+    border-left:none;
+  }
+  .liquid{
+    width:30px; height:12px;
+    border-radius:8px;
+    background:linear-gradient(#b06a2b,#7a3f19);
+    transform:translateY(-6px);
+  }
+
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="wall"></div>
+  <div class="ground"></div>
+  <div class="path"></div>
+
+  <div class="table-shadow"></div>
+
+  <div class="stage">
+    <div class="table-top"></div>
+    <div class="table-leg"></div>
+
+    <!-- ITEMS -->
+    <div class="items">
+      <div class="cylinder milo">
+        <div class="top"></div>
+        <div class="body"><div class="label">MILO</div></div>
+        <div class="base"></div>
+      </div>
+
+      <div class="cup"><div class="liquid"></div></div>
+
+      <div class="cup"><div class="liquid" style="background:linear-gradient(#eee,#ddd);"></div></div>
+
+      <div class="cylinder milk">
+        <div class="top"></div>
+        <div class="body"><div class="label">MILK</div></div>
+        <div class="base"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAIRS -->
+  <div class="chair c1"><div class="back"></div><div class="seat"></div><div class="leg l1"></div><div class="leg l2"></div></div>
+  <div class="chair c2"><div class="back"></div><div class="seat"></div><div class="leg l1"></div><div class="leg l2"></div></div>
+  <div class="chair c3"><div class="back"></div><div class="seat"></div><div class="leg l1"></div><div class="leg l2"></div></div>
+  <div class="chair c4"><div class="back"></div><div class="seat"></div><div class="leg l1"></div><div class="leg l2"></div></div>
+
+</div>
+</body>
+</html>
